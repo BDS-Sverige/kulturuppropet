@@ -1008,10 +1008,10 @@
             btn.textContent = 'Skickar…';
             const payload = {
                 type: 'contact',
-                name: name.value,
-                email: email.value,
-                subject: subject.value,
-                message: message.value
+                name: form.querySelector('#name').value,
+                email: form.querySelector('#email').value,
+                subject: form.querySelector('#subject').value,
+                message: form.querySelector('#message').value
               };
 
             const res = await fetch(ENDPOINT, {
