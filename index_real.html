@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="sv">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kulturuppropet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #F9F8F6;
+            color: #0f0505;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #FFFAFA;
+            border-bottom: 2px solid #ebded4;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #490000 0%, #2E0000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-family: 'Open Sauce', sans-serif;
+            cursor: pointer;
+            color: #0f0505;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links button:hover {
+            background-color: #ebded4;
+        }
+
+        .nav-links button.active {
+            color: #490000;
+            font-weight: 700;
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            color: #490000;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+        }
+        .keep {
+            white-space: nowrap;
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #490000;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            color: #2E0000;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            color: #0f0505;
+            font-size: 1.05rem;
+        }
+
+        a {
+            color: #490000;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #2E0000;
+        }
+
+        a:visited {
+            color: #5A1A1A; /* slightly muted, warmer red */
+            text-decoration-color: rgba(90, 26, 26, 0.5);
+        }
+
+        a:visited:hover {
+            color: #2E0000;
+            text-decoration-color: #2E0000;
+        }
+
+
+        /* Home page */
+        .pledge-section {
+            background: linear-gradient(135deg, #FFFAFA 0%, #ebded4 100%);
+            border-left: 5px solid #490000;
+            padding: 2.5rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+        }
+
+        .pledge-section h2 {
+            margin-top: 0;
+        }
+
+        .pledge-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: #2E0000;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #490000 0%, #2E0000 100%);
+            color: #F9F8F6;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(73, 0, 0, 0.2);
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(73, 0, 0, 0.3);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* Co-signatories */
+        .cosignatories-section {
+            margin-bottom: 3rem;
+        }
+
+        .cosignatories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .cosignatory-card {
+            background: linear-gradient(135deg, #FFFAFA 0%, #ebded4 100%);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #ebded4;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;      /* vertical centering */
+            justify-content: center;  /* horizontal centering */
+            text-align: center;
+        }
+
+        .cosignatory-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(73, 0, 0, 0.1);
+            border-color: #490000;
+        }
+
+        .cosignatory-card p {
+            margin: 0;
+            font-weight: 500;
+            color: #490000;
+        }
+
+        /* Signatories list */
+        .signatories-section {
+            margin-bottom: 3rem;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #ebded4;
+            border-radius: 6px;
+            font-family: 'Open Sauce', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #490000;
+            box-shadow: 0 0 0 3px rgba(73, 0, 0, 0.1);
+        }
+
+        .signatories-count {
+            background-color: #ebded4;
+            padding: 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #490000;
+            display: inline-block;
+        }
+
+        .signatories-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .signatory-item {
+            background: #FFFAFA;
+            border-radius: 6px;
+            border: 1px solid #ebded4;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #0f0505;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;      /* vertical centering */
+            justify-content: center;  /* horizontal centering */
+            text-align: center;
+            padding: 0.75rem;
+        }
+
+        .signatory-item:hover {
+            border-color: #490000;
+            background: #ebded4;
+        }
+
+        /* Newsletter section */
+        .newsletter-section {
+            background: linear-gradient(135deg, #ebded4 0%, #EFE9E3 100%);
+            padding: 3rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .newsletter-section h2 {
+            margin-top: 0;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Open Sauce', sans-serif;
+            font-size: 1rem;
+        }
+
+        .newsletter-form button {
+            background: #490000;
+            color: #F9F8F6;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .newsletter-form button:hover {
+            background: #2E0000;
+        }
+
+        /* Social links */
+        .social-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: #ebded4;
+            border-radius: 50%;
+            color: #490000;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .social-link:hover {
+            background: #490000;
+            color: #F9F8F6;
+            transform: translateY(-3px);
+        }
+
+        /* FAQ Accordion */
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #ebded4;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: #490000;
+            box-shadow: 0 2px 8px rgba(73, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            background: #FFFAFA;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #ebded4;
+        }
+
+        .faq-question h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            flex: 1;
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: #490000;
+            transition: transform 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .faq-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #F9F8F6;
+        }
+
+        .faq-answer.open {
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            padding: 1.5rem;
+            margin: 0;
+        }
+        .faq-answer ul {
+            list-style: disc;
+            margin-left: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .faq-answer li {
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-answer a {
+            color: #490000;
+            font-weight: 500;
+        }
+
+        .faq-answer a:hover {
+            color: #2E0000;
+        }
+
+        .faq-answer a:visited {
+            color: #6A2A2A;
+        }
+
+
+        /* Contact form */
+        .contact-form {
+            max-width: 600px;
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #490000;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ebded4;
+            border-radius: 6px;
+            font-family: 'Open Sauce', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #490000;
+            box-shadow: 0 0 0 3px rgba(73, 0, 0, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-submit {
+            background: linear-gradient(135deg, #490000 0%, #2E0000 100%);
+            color: #F9F8F6;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(73, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0f0505;
+            color: #F9F8F6;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            margin: 0;
+            color: #F9F8F6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            main {
+                padding: 1.5rem 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links button {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.9rem;
+            }
+
+            .cosignatories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .signatories-list {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div id="app">
+   <nav>
+    <div class="nav-container">
+     <div class="logo">
+      KULTURUPPROPET
+     </div>
+     <ul class="nav-links">
+      <li><button class="nav-btn active" data-page="home">Hem</button></li>
+      <li><button class="nav-btn" data-page="faq">Vanliga frågor</button></li>
+      <li><button class="nav-btn" data-page="about">Om oss</button></li>
+     </ul>
+    </div>
+   </nav>
+   <main><!-- HOME PAGE -->
+    <section id="home" class="page">
+     <h1>
+      Kulturarbetare <span class="keep">mot medskyldighet</span>
+    </h1>
+
+     <hr style="border: none; border-top: 3px solid #490000; margin: 2rem 0; opacity: 0.3;">
+     <div class="pledge-section">
+      <h2>Vår skrivelse</h2>
+      <div class="pledge-text">
+        Som scenkonstnärer, författare, bildkonstnärer, filmskapare, musiker, kuratorer, designers, alla former av kulturarbetare i Sverige måste vi säga att kultur inte är neutral. Det har den aldrig varit och kommer aldrig att bli. Den både speglar och formar de samhällen där den existerar i. Vi förklarar härmed vårt stöd och solidaritet med det palestinska folket och deras pågående kamp för rättvisa, värdighet och självbestämmande. <br><br>
+
+        FN slog precis fast att Israel begår folkmord i Gaza. Att stå upp för jämlikhet, rättvisa och frihet för alla människor är en moralisk plikt som ingen av oss kan ignorera. Därför måste vi nu höja våra röster mot det lidande som palestinierna utsätts för.<br><br>
+
+        Med inspiration från Artist United Against Apartheid (AUAA) där världskända musiker samlades i ett gemensamt projekt för att <a href="https://en.wikipedia.org/wiki/Artists_United_Against_Apartheid">vägra spela sin musik</a> i apartheidens Sydafrika, <b>lovar vi att inte samarbeta med israeliska kulturorganisationen, inklusive festivaler, teatrar och (sam)produktionsbolag som är inblandade* i folkmord och apartheid mot det palestinska folket.</b><br><br>
+
+        Detta är en målinriktad, strategisk solidaritetshandling riktad mot institutioner och system som är delaktiga i förtryck. Den riktar sig inte mot individer baserat på nationalitet eller identitet.<br><br>
+
+        <b>Konst är aldrig neutral, låt den vara ett verktyg för rättvisa.</b><br><br>
+
+        <i>*Exempel på medverkan är att försköna eller rättfärdiga folkmord och apartheid och/eller samarbeta med den regering som begår dem. Svar på vanliga frågor om detta löfte finns <a href="https://orca-synthesizer-t7lz.squarespace.com/faqs"> här</a>.</i>
+      </div><button class="cta-button" onclick="window.open('https://forms.gle/NsJ57kQVoC8i9LyT7', '_blank')">SKRIV UNDER HÄR!</button>
+     </div>
+     <div class="cosignatories-section">
+      <h2>Initiativtagare</h2>
+      <p>Denna skrivelse är bildad och drivs av:</p>
+      <div class="cosignatories-grid" id="coSignatoriesGrid"></div>
+     <div class="signatories-section">
+      <h2>Alla undertecknare</h2>
+      <div class="signatories-count" id="signatoriesCount"></div>
+      <div class="search-container"><input type="text" id="searchInput" class="search-input" placeholder="Sök efter namn...">
+      </div>
+      <div class="signatories-list" id="signatoriesList"><!-- Populated by JavaScript -->
+      </div>
+     </div>
+     <div class="newsletter-section">
+      <h2>Prenumerera på nyhetsbrev</h2>
+      <p>Håll dig uppdaterad om utvecklingen av Kulturuppropet</p>
+      <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)"><input type="email" placeholder="Din e-postadress" required> <button type="submit">Prenumerera</button>
+      </form>
+     </div>
+     <div class="social-section">
+      <h2>Följ oss</h2>
+      <div class="social-links"><a href="https://www.facebook.com/people/Kultur-Upprop/61584906936894/" target="_blank" rel="noopener noreferrer" class="social-link">f</a> <a href="https://www.instagram.com/kulturuppropet_/" target="_blank" rel="noopener noreferrer" class="social-link">📷</a> <a href="https://twitter.com/kulturuppropet" target="_blank" rel="noopener noreferrer" class="social-link">𝕏</a>
+      </div>
+     </div>
+    </section><!-- FAQ PAGE -->
+    <section id="faq" class="page">
+     <h1>VANLIGA FRÅGOR</h1>
+     <hr style="border: none; border-top: 3px solid #490000; margin: 2rem 0; opacity: 0.3;">
+     <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+       <h3>Hur avgör jag vilka aktörer i Israel som är inblandade i folkmord och apartheid mot det palestinska folket?</h3><span class="faq-toggle">▼</span>
+      </div>
+      <div class="faq-answer">
+       <p>
+        Israels stora filmfestivaler (inklusive men inte begränsat till Jerusalem Film Festival, Haifa International Film Festival, Docaviv och TLVfest) fortsätter att samarbeta med den israeliska regeringen medan den utför <a href="https://www.ohchr.org/en/press-releases/2024/11/un-special-committee-finds-israels-warfare-methods-gaza-consistent-genocide">vad ledande experter har definierat som folkmord</a> mot palestinierna i Gaza.<br><br>
+        Trots att de verkar inom Israels apartheidsystem, och därmed drar nytta av det, har de allra flesta israeliska produktions- och distributionsbolag, försäljningsagenter och andra kulturinstitutioner aldrig ställt sig bakom det palestinska folkets fullständiga, internationellt erkända rättigheter.<br><br>
+        Det finns dock israeliska institutioner som inte är delaktiga. För bästa praxis uppmuntrar vi er att söka riktlinjer som fastställts av det palestinska civila samhället. Vi uppmuntrar kulturarbetare att ställa frågor och göra egna efterforskningar om de aktörer som de planerar att arbeta med.</p>
+      </div>
+     </div>
+     <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+       <h3>Förbjuder detta löfte mig att arbeta med israeliska individer?</h3><span class="faq-toggle">▼</span>
+      </div>
+      <div class="faq-answer">
+       <p>Nej. Uppmaningen riktar sig till kulturarbetare att vägra att arbeta med israeliska institutioner som är delaktiga i Israels brott mot de mänskliga rättigheterna mot det palestinska folket. Denna vägran riktar sig mot institutionell delaktighet, inte identitet. Det finns också 2 miljoner palestinier med israeliskt medborgarskap.</p>
+      </div>
+     </div>
+     <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+       <h3>Jag arbetar i en position som inte har makt över alla kontrakt som är involverade i ett samarbete. Kan jag ändå underteckna detta löfte?</h3><span class="faq-toggle">▼</span>
+      </div>
+      <div class="faq-answer">
+       <p>
+        Ja. Detta löfte handlar om de kontrakt som du ombeds att underteckna och/eller som du har kontroll över, och vi förstår fullt ut att vissa kulturarbetare inte kan hållas ansvariga för, och inte alltid har kontroll över, alla tredjepartskontrakt kring ett projekt, särskilt i sammanhang där kulturarbetare arbetar med projekt med stora internationella samarbeten. Vi ser detta löfte som ett viktigt steg på vägen mot att minska och i slutändan upphöra med medverkan i förtryck. Vi hoppas att kulturarbetare kan sträva efter att genomföra detta i så stor utsträckning som är rimligt.<br><br>
+
+        <b>Vet vem du arbetar med:</b><br>
+        Alltför många av oss ingår anställningsavtal, sekretessavtal och andra typer av avtal utan att först ställa frågor. Oavsett vilken roll du har i en produktion är det alltid viktigt att förstå vilka dina arbetsgivare är. Innan du ingår ett avtal, fråga vilka producenter, produktionsbolag, finansiärer eller distributörer som är inblandade. Om du har en agent och/eller manager, be dem att alltid inkludera denna information tillsammans med anställningserbjudanden. Ställ frågor och be om råd om avtalsvillkor som du anser är etiskt eller politiskt problematiska. Om det är relevant, överväg att ta upp dina farhågor med din fackförening eller branschorganisation. Du kanske också vill fundera över vilka leverantörer och underleverantörer du arbetar med och om de är företag som medverkar till förtrycket av det palestinska folket.</p>
+      </div>
+     </div>
+     <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+       <h3>Hur används uppropet?</h3><span class="faq-toggle">▼</span>
+      </div>
+      <div class="faq-answer">
+       <p>Kulturuppropet skickas till regering och riksdag för att visa den starka stöden för kultur bland svenska kulturarbetare. Det är ett verktyg för att påverka politiska beslut och belysa kulturens betydelse.</p>
+      </div>
+     </div>
+     <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+       <h3>Finns det några rättsliga mekanismer som jag kan använda för att omsätta detta löfte i handling?</h3><span class="faq-toggle">▼</span>
+      </div>
+      <div class="faq-answer">
+       <p>
+           Det finns flera sätt att införa dina preferenser i de juridiska avtal som vi vanligtvis använder i filmbranschen. Några standardmetoder som har fungerat tidigare är:<br></p>
+            <ul>
+                <li>Behålla eller reservera rättigheter för specifika distributionsområden som du vill fatta beslut om från fall till fall.</li>
+
+                <li>Ange att du ska konsulteras och/eller ha rätt att vägra vissa typer av beslut, t.ex. festivalinbjudningar, avtal med finansiella partners, produktions- eller distributionspartners etc.</li>
+
+                <li>Dessutom kan en sekretessklausul vara till hjälp för att säkerställa att ingenting i avtalet delas utanför de personer som är parter i avtalet.</li>
+            </ul>
+
+            <p>Några har haft valt att införa specifika klausuler i sina avtal som tydligt identifierar den medverkan de vill undvika. Här är ett exempel på en sådan klausul som har utarbetats av en filmarbetare i samråd med Palestine Legal och Artists for Palestine UK:<br>
+
+            <i>”Filmen kommer inte att visas eller på annat sätt förekomma vid någon institution (inklusive filmfestivaler, biografer, tv-bolag och andra) som samarbetar med, finansieras/sponsras av eller på annat sätt verkar under beskydd av stater eller enheter/myndigheter som har åtalats för folkmord vid Internationella domstolen eller som har åtalats för brott mot mänskligheten, inklusive apartheid, av internationella domstolar eller ledande människorättsorganisationer.”</i>
+       </p>
+      </div>
+     </div>
+     <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+       <h3>Vilka autoritativa källor säger att Israel begår folkmord?</h3><span class="faq-toggle">▼</span>
+      </div>
+      <div class="faq-answer">
+       <br>
+            <ul>
+                <li><b>16 september:</b> FN slår fast att Israel begår folkmord.</li>
+
+                <li><b>31 augusti 2025:</b> <a href="https://genocidescholars.org/wp-content/uploads/2025/08/IAGS-Resolution-on-Gaza-FINAL.pdf">Internationella föreningen för folkmordsforskare</a> förklarar att ”Israels politik och åtgärder i Gaza uppfyller den juridiska definitionen av folkmord i artikel II i FN:s konvention om förebyggande och bestraffning av brottet folkmord (1948)”.</li>
+
+                <li><b>5 december 2024:</b> ”<a href="https://www.amnesty.org/en/latest/news/2024/12/amnesty-international-concludes-israel-is-committing-genocide-against-palestinians-in-gaza/">Amnesty International</a> drar slutsatsen att Israel begår folkmord mot palestinierna i Gaza”</li>
+                <li><b>14 november 2024:</b> ”<a href="https://www.ohchr.org/en/press-releases/2024/11/un-special-committee-finds-israels-warfare-methods-gaza-consistent-genocide">FN:s särskilda kommitté</a> finner att Israels krigföring i Gaza överensstämmer med folkmord, inklusive svält som ett krigsvapen” </li>
+                <li><b>26 januari 2024:</b> ”Internationella domstolen beordrar Israel att förhindra folkmord i Gaza”, <a href="https://www.theguardian.com/world/video/2024/jan/26/international-court-of-justice-orders-israel-prevent-genocide-gaza-video">Guardian-rapport</a>.</li>
+                <li><b>9 december 2023:</b> ”Uttalande från <a href="https://contendingmodernities.nd.edu/global-currents/statement-of-scholars-7-october/">forskare inom holocaust- och folkmordsstudier</a> om massvåldet i Israel och Palestina sedan den 7 oktober”</li>
+            </ul>
+       <br>
+      </div>
+     </div>
+     <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+       <h3>Genom att vägra att visa våra filmer eller arbeta i vissa sammanhang, ger vi då upp våra röster där de är som viktigast?</h3><span class="faq-toggle">▼</span>
+      </div>
+      <div class="faq-answer">
+       <p>
+        Att underteckna löftet handlar om att förstärka våra röster genom att tala kollektivt, inte om att tysta dem. Genom att underteckna detta löfte hedrar du det palestinska civilsamhällets uppmaning och ansluter dig till miljontals andra kulturarbetare som vägrar att täcka upp för Israels apartheidstat, som använder kultur för att skönmåla förtrycket. För att den konstnärliga dialogen ska vara meningsfull måste den grundas på det juridiska erkännandet att alla människor har rätt till lika rättigheter. Fram till dess talar vi högst genom att tala i solidaritet med palestinierna. Som kulturarbetare anser vi att vi måste uppfylla vår etiska skyldighet att inte bidra till tydliga brott mot internationell rätt. 
+
+        Vi stöder initiativ från <a href="https://www.hollywoodreporter.com/news/politics-news/mark-ruffalo-ramy-youssef-call-for-pro-palestine-sag-member-protection-1235993880/"> SAG-AFTRA-medlemmar (USA)</a> och <a href="https://congress.tuc.org.uk/motion-24-protect-arts-workers-freedom-of-expression/#sthash.QrakQg00.vlrX7wm5.dpbs"> Equity (Storbritannien)</a> som försvarar yttrandefriheten för filmarbetare som talar för palestiniernas rättigheter.</p>
+      </div>
+     </div>
+    </section><!-- ABOUT PAGE -->
+    <section id="about" class="page">
+     <h1>OM OSS</h1>
+     <hr style="border: none; border-top: 3px solid #490000; margin: 2rem 0; opacity: 0.3;">
+     <p>Kulturuppropet är ett initiativ av scenkonstnärer, författare, bildkonstnärer, filmskapare, musiker, kuratorer, designers och alla former av kulturarbetare i Sverige som erkänner att kultur aldrig är neutral. Den speglar och formar alltid de samhällen där den verkar.</p>
+     <p>UVi står i solidaritet med det palestinska folket i deras kamp för rättvisa, värdighet och självbestämmande. Inspirerade av historiska solidaritetsinitiativ som Artists United Against Apartheid lovar vi att inte samarbeta med israeliska kulturinstitutioner som är delaktiga i folkmord och apartheid. Detta är en strategisk handling riktad mot system, inte individer.</p>
+     <p>Vi tror att konst kan vara ett verktyg för rättvisa och att det är vår moraliska plikt att höja våra röster mot orättvisor och förtryck.</p>
+     <h2>Kontakta oss</h2>
+     <p>Har du frågor eller vill samarbeta? Kontakta oss gärna genom formuläret nedan.</p>
+     <form class="contact-form" onsubmit="handleContactSubmit(event)">
+      <div class="form-group"><label for="name">Namn *</label> <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group"><label for="email">E-post *</label> <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group"><label for="subject">Ämne *</label> <input type="text" id="subject" name="subject" required>
+      </div>
+      <div class="form-group"><label for="message">Meddelande *</label> <textarea id="message" name="message" required></textarea>
+      </div><button type="submit" class="form-submit">Skicka</button>
+     </form>
+    </section>
+   </main>
+   <footer>
+    <p>© 2024 Kulturuppropet. En röst för kultur i Sverige.</p>
+   </footer>
+  </div>
+  <script>
+        const SHEET_URL =
+          'https://docs.google.com/spreadsheets/d/e/2PACX-1vRDpuyRTgMtvdhU3COXqzseC3RhaAPtLPV5lle0xzfXFhxjuq-KNrwtABPuU-bU-W3OnlUdA6vC8jy8/pub?gid=0&single=true&output=csv';
+        
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const page = this.dataset.page;
+                showPage(page);
+                history.pushState(null, '', `#${page}`);
+                scrollToTop();
+            });
+        });
+
+        async function loadSignatories() {
+            const response = await fetch(SHEET_URL);
+            const csv = await response.text();
+
+            const rows = csv
+                .trim()
+                .split('\n')
+                .slice(1); // skip header
+
+            const seen = new Set();
+            const allSignatories = [];
+            const coSignatories = [];
+
+            rows.forEach(row => {
+                const [rawName, rawIsCo = ''] = row
+                    .split(',')
+                    .map(v => v.replace(/\r/g, '').trim());
+
+                if (!rawName) return;
+
+                // Normalize for deduplication
+                const key = rawName.toLowerCase().replace(/\s+/g, ' ');
+
+                if (seen.has(key)) return;
+                seen.add(key);
+
+                if (rawIsCo.toLowerCase() === 'ja') {
+                    coSignatories.push(rawName);
+                }
+                allSignatories.push(rawName);
+            });
+
+            // Optional: Swedish alphabetical sort
+            allSignatories.sort((a, b) => a.localeCompare(b, 'sv'));
+            coSignatories.sort((a, b) => a.localeCompare(b, 'sv'));
+
+
+            renderCoSignatories(coSignatories);
+            renderSignatories(allSignatories);
+            updateSignatoryCount(seen.size);
+
+            return allSignatories;
+        }
+
+
+        function renderCoSignatories(names) {
+            const container = document.getElementById('coSignatoriesGrid');
+
+            container.innerHTML = names.map(name => `
+                <div class="cosignatory-card">
+                    <p>${name}</p>
+                </div>
+            `).join('');
+        }
+
+        let allSignatories = [];
+
+        function renderSignatories(names, filter = '') {
+            const container = document.getElementById('signatoriesList');
+
+            const filtered = names.filter(name =>
+                name.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            container.innerHTML = filtered.map(name =>
+                `<div class="signatory-item">${name}</div>`
+            ).join('');
+        }
+        
+        function updateSignatoryCount(count) {
+            const el = document.getElementById('signatoriesCount');
+            el.textContent = `${count} undertecknare hittills`;
+        }
+
+
+        function showPage(page) {
+            // Update active nav button
+            document.querySelectorAll('.nav-btn').forEach(b =>
+                b.classList.toggle('active', b.dataset.page === page)
+            );
+
+            // Show correct page section
+            document.querySelectorAll('.page').forEach(p =>
+                p.classList.toggle('active', p.id === page)
+            );
+        }
+
+        function scrollToTop() {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            window.scrollTo({
+                top: 0,
+                behavior: prefersReducedMotion ? 'auto' : 'smooth'
+            });
+        }
+
+
+        function loadPageFromURL() {
+            const page = location.hash.replace('#', '') || 'home';
+
+            // Fallback safety
+            if (!document.getElementById(page)) {
+                showPage('home');
+                scrollToTop();
+                return;
+            }
+
+            showPage(page);
+            scrollToTop();
+        }
+
+        // Initial load
+        loadPageFromURL();
+
+        // Back / forward buttons
+        window.addEventListener('popstate', loadPageFromURL);
+
+        // Populate signatories
+        function populateSignatories(filter = '') {
+            const container = document.getElementById('signatoriesList');
+            const filtered = signatories.filter(name => 
+                name.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            container.innerHTML = filtered.map(name => 
+                `<div class="signatory-item">${name}</div>`
+            ).join('');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function () {
+            renderSignatories(allSignatories, this.value);
+        });
+
+
+        // FAQ toggle
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const toggle = element.querySelector('.faq-toggle');
+            
+            answer.classList.toggle('open');
+            toggle.classList.toggle('open');
+        }
+
+        // Form submissions
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            const input = e.target.querySelector('input[type="email"]');
+            const email = input.value;
+            
+            // Simple feedback
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = 'Tack!';
+            btn.style.background = '#012E00';
+            
+            input.value = '';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            
+            // Simple feedback
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = 'Meddelande skickat!';
+            btn.style.background = '#012E00';
+            
+            e.target.reset();
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        // Initialize
+        loadSignatories().then(names => {
+            allSignatories = names;
+        });
+
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c826bbe15bbf375',t:'MTc3MDEyNjg3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
