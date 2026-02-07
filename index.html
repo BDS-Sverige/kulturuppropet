@@ -793,6 +793,7 @@
   <script>
         const SHEET_URL =
           'https://docs.google.com/spreadsheets/d/e/2PACX-1vRDpuyRTgMtvdhU3COXqzseC3RhaAPtLPV5lle0xzfXFhxjuq-KNrwtABPuU-bU-W3OnlUdA6vC8jy8/pub?gid=0&single=true&output=csv';
+        const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzWMT5X1ItpeboZp9wGwsuEc0yDZSYuQ-2bMt41iWJpuZjTlzL8R3OqGOZ4GqAMd1o7zg/exec';
         
 
         // Navigation functionality
@@ -958,10 +959,8 @@
 
 
         // Form submissions
-        function handleNewsletterSubmit(e) {
+        async function handleNewsletterSubmit(e) {
             e.preventDefault();
-            
-            const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzWMT5X1ItpeboZp9wGwsuEc0yDZSYuQ-2bMt41iWJpuZjTlzL8R3OqGOZ4GqAMd1o7zg/exec';
 
             const input = e.target.querySelector('input[type="email"]');
             const email = input.value;
@@ -998,19 +997,41 @@
             }, 2000);
         }
 
-        function handleContactSubmit(e) {
+        async function handleContactSubmit(e) {
             e.preventDefault();
             
             // Simple feedback
             const btn = e.target.querySelector('button');
             const originalText = btn.textContent;
-            btn.textContent = 'Meddelande skickat!';
-            btn.style.background = '#012E00';
+
+            btn.disabled = true;
+            btn.textContent = 'Skickar…';
+            const payload = {
+                type: 'contact',
+                name: name.value,
+                email: email.value,
+                subject: subject.value,
+                message: message.value
+              };
+
+            const res = await fetch(ENDPOINT, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                btn.textContent = 'Meddelande skickat!';
+                btn.style.background = '#012E00';
+                e.target.reset();
+            } else {
+                btn.textContent = 'Fel uppstod';
+            }
             
             e.target.reset();
             setTimeout(() => {
                 btn.textContent = originalText;
                 btn.style.background = '';
+                btn.disabled = false;
             }, 2000);
         }
 
