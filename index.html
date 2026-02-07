@@ -1000,7 +1000,7 @@
         async function handleContactSubmit(e) {
             e.preventDefault();
             
-            // Simple feedback
+            const form = e.target;
             const btn = e.target.querySelector('button');
             const originalText = btn.textContent;
 
