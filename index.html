@@ -448,14 +448,9 @@
         }
 
         .faq-answer {
-            max-height: 0;
+            height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: #F9F8F6;
-        }
-
-        .faq-answer.open {
-            max-height: 500px;
+            transition: height 0.3s ease;
         }
 
         .faq-answer p {
@@ -583,7 +578,7 @@
                 justify-content: center;
                 width: 100%;
             }
-            
+
             /*.nav-links {
                 gap: 1rem;
             }*/
@@ -941,13 +936,21 @@
 
 
         // FAQ toggle
-        function toggleFaq(element) {
-            const answer = element.nextElementSibling;
-            const toggle = element.querySelector('.faq-toggle');
-            
-            answer.classList.toggle('open');
-            toggle.classList.toggle('open');
-        }
+       function toggleFaq(element) {
+           const answer = element.nextElementSibling;
+           const toggle = element.querySelector('.faq-toggle');
+
+           if (answer.style.height && answer.style.height !== '0px') {
+               // Close
+               answer.style.height = '0px';
+               toggle.classList.remove('open');
+           } else {
+               // Open
+               answer.style.height = answer.scrollHeight + 'px';
+               toggle.classList.add('open');
+           }
+       }
+
 
         // Form submissions
         function handleNewsletterSubmit(e) {
