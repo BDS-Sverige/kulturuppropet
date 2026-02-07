@@ -567,7 +567,7 @@
             main {
                 padding: 1.5rem 1rem;
             }
-            
+
             .keep {
                     white-space: normal;
             }
@@ -663,7 +663,7 @@
      <div class="newsletter-section">
       <h2>Prenumerera på nyhetsbrev</h2>
       <p>Håll dig uppdaterad om utvecklingen av Kulturuppropet</p>
-      <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)"><input type="email" placeholder="Din e-postadress" required> <button type="submit">Prenumerera</button>
+      <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)"><input type="newsletterEmail" required placeholder="Din e-postadress" required> <button type="submit">Prenumerera</button>
       </form>
      </div>
      <div class="social-section">
@@ -960,19 +960,41 @@
         // Form submissions
         function handleNewsletterSubmit(e) {
             e.preventDefault();
+            
+            const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzWMT5X1ItpeboZp9wGwsuEc0yDZSYuQ-2bMt41iWJpuZjTlzL8R3OqGOZ4GqAMd1o7zg/exec';
+
             const input = e.target.querySelector('input[type="email"]');
             const email = input.value;
             
+
             // Simple feedback
             const btn = e.target.querySelector('button');
             const originalText = btn.textContent;
-            btn.textContent = 'Tack!';
-            btn.style.background = '#012E00';
+
+            btn.disabled = true;
+            btn.textContent = 'Skickar…';
+            const res = await fetch(ENDPOINT, {
+                method: 'POST',
+                body: JSON.stringify({
+                  type: 'newsletter',
+                  email
+                })
+            });
+
+            if (res.ok) {
+                btn.textContent = 'Tack!';
+                btn.style.background = '#012E00';
+                e.target.reset();
+            } else {
+                btn.textContent = 'Fel uppstod';
+            }
+
             
             input.value = '';
             setTimeout(() => {
                 btn.textContent = originalText;
                 btn.style.background = '';
+                btn.disabled = false;
             }, 2000);
         }
 
