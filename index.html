@@ -663,7 +663,7 @@
      <div class="newsletter-section">
       <h2>Prenumerera på nyhetsbrev</h2>
       <p>Håll dig uppdaterad om utvecklingen av Kulturuppropet</p>
-      <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)"><input type="newsletterEmail" required placeholder="Din e-postadress" required> <button type="submit">Prenumerera</button>
+      <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)"><input type="email" required placeholder="Din e-postadress" required> <button type="submit">Prenumerera</button>
       </form>
      </div>
      <div class="social-section">
@@ -962,7 +962,7 @@
         async function handleNewsletterSubmit(e) {
             e.preventDefault();
 
-            const input = e.target.querySelector('input[type="newsletterEmail"]');
+            const input = e.target.querySelector('input[type="email"]');
             const email = input.value;
             
 
