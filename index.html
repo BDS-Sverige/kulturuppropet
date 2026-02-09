@@ -246,13 +246,6 @@
         }
 
         /* Layouts */
-        .cosignatories-grid,
-        .signatories-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 0.5rem 1.5rem;
-        }
-
 
         .search-container {
             margin-bottom: 2rem;
@@ -285,7 +278,155 @@
             display: inline-block;
         }
 
-        
+        /* Section header (pill + line) */
+        /* Section header (bubble + line, enhanced) */
+        .list-section-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Base bubble style */
+        .list-section-label {
+            padding: 0.6rem 1.4rem;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;          /* ↓ was 800 */
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+
+        /* Filled bubble (Initiativtagare) */
+        .list-section-label.filled {
+            background: linear-gradient(135deg, #490000 0%, #2E0000 100%);
+            color: #FFFAFA;
+            box-shadow: 0 4px 14px rgba(73, 0, 0, 0.25);
+        }
+
+        /* Outlined bubble (Alla undertecknare) */
+        .list-section-label.outlined {
+            border: 2.5px solid #490000;
+            color: #490000;
+            background: #FFFAFA;
+        }
+
+        /* Line extending right */
+        .list-section-line {
+            flex: 1;
+            height: 2px;                    /* thicker like example */
+            background-color: #490000;
+            opacity: 0.25;
+        }
+
+        /* Co-signatories grid (matches example) */
+        .cosignatories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Co-signatory card */
+        .co-name {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            background: #FFFAFA;
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+
+            box-shadow: 0 2px 12px rgba(73, 0, 0, 0.06);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        /* Hover animation (matches example) */
+        .co-name:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(73, 0, 0, 0.12);
+        }
+
+        /* Initial circle */
+        .co-initial {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            flex-shrink: 0;
+
+            background: linear-gradient(135deg, #490000, #2E0000);
+            color: #FFFAFA;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Name + title wrapper */
+        .co-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        /* Name */
+        .co-text .name {
+            font-weight: 700;
+            color: #490000;
+            font-size: 0.95rem;
+        }
+
+        /* Title */
+        .co-text .title {
+            font-size: 0.8rem;
+            color: #6b3a3a;
+        }
+
+
+        /* Flowing column list (exact behavior from example) */
+        .signatories-list {
+            columns: 1;
+            column-gap: 2.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .signatories-list {
+                columns: 2;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .signatories-list {
+                columns: 3;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .signatories-list {
+                columns: 4;
+            }
+        }
+
+        .signatories-list .name-item {
+            break-inside: avoid;
+            padding: 0.25rem 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #0f0505;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .signatories-list .name-item:hover {
+            transform: translateX(3px);
+            color: #490000;
+        }
 
 
         /* Newsletter section */
@@ -566,11 +707,6 @@
             .newsletter-form {
                 flex-direction: column;
             }
-
-            .cosignatories-grid,
-            .signatories-list {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
         }
 
     </style>
@@ -616,10 +752,16 @@
       </div><button class="cta-button" onclick="window.open('https://forms.gle/NsJ57kQVoC8i9LyT7', '_blank')">SKRIV UNDER HÄR!</button>
      </div>
      <div class="cosignatories-section">
-      <h2>Initiativtagare</h2>
+      <div class="list-section-header">
+        <div class="list-section-label filled">Initiativtagare</div>
+        <div class="list-section-line"></div>
+      </div>
       <div class="cosignatories-grid" id="coSignatoriesGrid"></div>
      <div class="signatories-section">
-      <h2>Alla undertecknare</h2>
+      <div class="list-section-header">
+        <div class="list-section-label outlined">Alla undertecknare</div>
+        <div class="list-section-line"></div>
+      </div>
       <div class="signatories-count" id="signatoriesCount"></div>
       <div class="search-container"><input type="text" id="searchInput" class="search-input" placeholder="Sök efter namn...">
       </div>
@@ -761,6 +903,37 @@
           'https://docs.google.com/spreadsheets/d/e/2PACX-1vRDpuyRTgMtvdhU3COXqzseC3RhaAPtLPV5lle0xzfXFhxjuq-KNrwtABPuU-bU-W3OnlUdA6vC8jy8/pub?gid=0&single=true&output=csv';
         const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzWMT5X1ItpeboZp9wGwsuEc0yDZSYuQ-2bMt41iWJpuZjTlzL8R3OqGOZ4GqAMd1o7zg/exec';
         
+        const TEMP_CO_SIGNATORIES = [
+          { name: "Anna Berg", title: "Regissör" },
+          { name: "Jonas Nilsson", title: "Författare" },
+          { name: "Maria Ekström", title: "" },
+          { name: "David Larsson", title: "Musiker" },
+          { name: "Anna Berg", title: "Regissör" },
+          { name: "Jonas Nilsson", title: "Författare" },
+          { name: "Maria Ekström", title: "" },
+          { name: "David Larsson", title: "Musiker" },
+          { name: "Anna Berg", title: "Regissör" },
+          { name: "Jonas Nilsson", title: "Författare" },
+          { name: "Maria Ekström", title: "" },
+          { name: "David Larsson", title: "Musiker" },
+          { name: "Anna Berg", title: "Regissör" },
+          { name: "Jonas Nilsson", title: "Författare" },
+          { name: "Maria Ekström", title: "" },
+          { name: "David Larsson", title: "Musiker" }
+        ];
+
+        const TEMP_SIGNATORIES = [
+          "Alex Johansson", "Beatrice Holm", "Carl Nyberg", "Dina Abbas",
+          "Emil Forsberg", "Felicia Strand", "Gustav Rydén", "Hala Mansour",
+          "Ida Palm", "Johan Ek", "Khadija Omar", "Leo Sundqvist",
+          "Malin Roos", "Nabil Farouk", "Olivia Sten",
+          "Patrik Hult", "Qasim Noor", "Rasmus Berglund",
+          "Sanna Björk", "Tariq Mahmoud", "Ulrika Fält",
+          "Victor Amin", "Wilma Ekholm", "Xenia Pavlov",
+          "Yasin Demir", "Zara Lindström", "Åsa Gran",
+          "Ömer Kaplan", "Ängla Fors", "Émile Dupont"
+        ];
+
 
         // Navigation functionality
         document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -773,59 +946,90 @@
         });
 
         async function loadSignatories() {
-            const response = await fetch(SHEET_URL);
-            const csv = await response.text();
+            try {
+                const response = await fetch(SHEET_URL);
+                if (!response.ok) throw new Error("Fetch failed");
 
-            const rows = csv
-                .trim()
-                .split('\n')
-                .slice(1); // skip header
+                const csv = await response.text();
+                const rows = csv
+                    .trim()
+                    .split('\n')
+                    .slice(1); // skip header
 
-            const seen = new Set();
-            const allSignatories = [];
-            const coSignatories = [];
+                const seen = new Set();
+                const allSignatories = [];
+                const coSignatories = [];
 
-            rows.forEach(row => {
-                const [rawName, rawIsCo = ''] = row
-                    .split(',')
-                    .map(v => v.replace(/\r/g, '').trim());
+                rows.forEach(row => {
+                    const [rawName, rawIsCo = '', , rawTitle = ''] = row
+                        .split(',')
+                        .map(v => v.replace(/\r/g, '').trim());
 
-                if (!rawName) return;
+                    if (!rawName) return;
 
-                // Normalize for deduplication
-                const key = rawName.toLowerCase().replace(/\s+/g, ' ');
+                    const key = rawName.toLowerCase().replace(/\s+/g, ' ');
+                    if (seen.has(key)) return;
+                    seen.add(key);
 
-                if (seen.has(key)) return;
-                seen.add(key);
+                    if (rawIsCo.toLowerCase() === 'ja') {
+                        coSignatories.push({
+                            name: rawName,
+                            title: rawTitle
+                        });
+                    }
 
-                if (rawIsCo.toLowerCase() === 'ja') {
-                    coSignatories.push(rawName);
-                }
-                allSignatories.push(rawName);
-            });
+                    allSignatories.push(rawName);
+                });
 
-            // Optional: Swedish alphabetical sort
-            allSignatories.sort((a, b) => a.localeCompare(b, 'sv'));
-            coSignatories.sort((a, b) => a.localeCompare(b, 'sv'));
+                allSignatories.sort((a, b) => a.localeCompare(b, 'sv'));
+                coSignatories.sort((a, b) =>
+                    a.name.localeCompare(b.name, 'sv')
+                );
 
 
-            renderCoSignatories(coSignatories);
-            renderSignatories(allSignatories);
-            updateSignatoryCount(seen.size);
+                renderCoSignatories(coSignatories);
+                renderSignatories(allSignatories);
+                updateSignatoryCount(seen.size);
 
-            return allSignatories;
+                return allSignatories;
+
+            } catch (err) {
+                console.warn("Using temporary local signatory lists", err);
+
+                // Fallback for local testing
+                const co = [...TEMP_CO_SIGNATORIES].sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+                const all = [...TEMP_SIGNATORIES].sort((a, b) => a.localeCompare(b, 'sv'));
+
+                renderCoSignatories(co);
+                renderSignatories(all);
+                updateSignatoryCount(co.length + all.length);
+
+                return all;
+            }
         }
 
-
-        function renderCoSignatories(names) {
+        function renderCoSignatories(entries) {
             const container = document.getElementById('coSignatoriesGrid');
 
-            container.innerHTML = names.map(name => `
-                <div class="name-item is-co">${name}</div>
-            `).join('');
+            container.innerHTML = entries.map(({ name, title }) => {
+                const initial = name.trim().charAt(0).toUpperCase();
+                const safeTitle = title?.trim() || "Kulturarbetare";
+
+                return `
+                    <div class="co-name">
+                        <div class="co-initial">${initial}</div>
+                        <div class="co-text">
+                            <div class="name">${name}</div>
+                            <div class="title">${safeTitle}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        let allSignatories = [];
+        const allSignatories = [];
+        const coSignatories = [];
+
 
         function renderSignatories(names, filter = '') {
             const container = document.getElementById('signatoriesList');
