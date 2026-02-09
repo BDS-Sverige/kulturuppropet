@@ -294,28 +294,24 @@
 
         .signatories-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 0.75rem;
         }
 
         .signatory-item {
-            background: #FFFAFA;
-            border-radius: 6px;
-            border: 1px solid #ebded4;
-            text-align: center;
+            background: transparent;
+            border: none;
+            padding: 0.4rem 0.2rem;
+            text-align: left;
             font-size: 0.95rem;
-            color: #0f0505;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;      /* vertical centering */
-            justify-content: center;  /* horizontal centering */
-            text-align: center;
-            padding: 0.75rem;
+            color: #490000;
+            font-weight: 500;
         }
 
+        /* Remove hover effects entirely */
         .signatory-item:hover {
-            border-color: #490000;
-            background: #ebded4;
+            background: transparent;
+            border: none;
         }
 
         /* Newsletter section */
