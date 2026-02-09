@@ -974,7 +974,7 @@
                     if (seen.has(key)) return; // Avoid duplicates
                     seen.add(key);
 
-                    if (rawIsCo === 'ja') {
+                    if (rawIsCo.toLowerCase() === 'ja') {
                         coSignatories.push({
                             name: rawName,
                             title: rawTitle || "Kulturarbetare"
