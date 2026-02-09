@@ -946,9 +946,6 @@
             });
         });
 
-        let allSignatories = [];
-        let coSignatories = [];
-
         async function loadSignatories() {
             try {
                 const response = await fetch(SHEET_URL);
@@ -963,6 +960,8 @@
                 });
 
                 const seen = new Set();
+                const allSignatories = [];
+                const coSignatories = [];
 
                 data.forEach(row => {
                     const rawName = row['Name']?.trim();
