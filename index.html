@@ -1013,13 +1013,14 @@
 
             container.innerHTML = entries.map(({ name, title }) => {
                 const initial = name.trim().charAt(0).toUpperCase();
-                const safeTitle = title?.trim() || "Kulturarbetare";
+                const safeTitle = stripQuotes(title?.trim() || "Kulturarbetare");
+                const cleanName = stripQuotes(name.trim());
 
                 return `
                     <div class="co-name">
                         <div class="co-initial">${initial}</div>
                         <div class="co-text">
-                            <div class="name">${name}</div>
+                            <div class="name">${cleanName}</div>
                             <div class="title">${safeTitle}</div>
                         </div>
                     </div>
@@ -1048,6 +1049,9 @@
             el.textContent = `${count} undertecknare hittills`;
         }
 
+        function stripQuotes(str) {
+            return str.replace(/^"(.*)"$/, '$1');
+        }
 
         function showPage(page) {
             // Update active nav button
