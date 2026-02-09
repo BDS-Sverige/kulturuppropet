@@ -960,8 +960,8 @@
                 });
 
                 const seen = new Set();
-                const allSignatories = [];
-                const coSignatories = [];
+                let allSignatories = [];
+                let coSignatories = [];
 
                 data.forEach(row => {
                     const rawName = row['Name']?.trim();
