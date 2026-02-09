@@ -898,6 +898,7 @@
     <p>© 2026 Kulturuppropet.</p>
    </footer>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
         const SHEET_URL =
           'https://docs.google.com/spreadsheets/d/e/2PACX-1vRDpuyRTgMtvdhU3COXqzseC3RhaAPtLPV5lle0xzfXFhxjuq-KNrwtABPuU-bU-W3OnlUdA6vC8jy8/pub?gid=0&single=true&output=csv';
@@ -950,42 +951,42 @@
                 const response = await fetch(SHEET_URL);
                 if (!response.ok) throw new Error("Fetch failed");
 
-                const csv = await response.text();
-                const rows = csv
-                    .trim()
-                    .split('\n')
-                    .slice(1); // skip header
+                const csvText = await response.text();
+
+                // Parse CSV properly with PapaParse
+                const { data } = Papa.parse(csvText, {
+                    header: true,        // Use first row as keys
+                    skipEmptyLines: true // Ignore blank rows
+                });
 
                 const seen = new Set();
                 const allSignatories = [];
                 const coSignatories = [];
 
-                rows.forEach(row => {
-                    const [rawName, rawIsCo = '', , rawTitle = ''] = row
-                        .split(',')
-                        .map(v => v.replace(/\r/g, '').trim());
+                data.forEach(row => {
+                    const rawName = row['Name']?.trim();
+                    const rawIsCo = row['IsCo']?.trim().toLowerCase();
+                    const rawTitle = row['Title']?.trim() || '';
 
                     if (!rawName) return;
 
                     const key = rawName.toLowerCase().replace(/\s+/g, ' ');
-                    if (seen.has(key)) return;
+                    if (seen.has(key)) return; // Avoid duplicates
                     seen.add(key);
 
-                    if (rawIsCo.toLowerCase() === 'ja') {
+                    if (rawIsCo === 'ja') {
                         coSignatories.push({
                             name: rawName,
-                            title: rawTitle
+                            title: rawTitle || "Kulturarbetare"
                         });
                     }
 
                     allSignatories.push(rawName);
                 });
 
+                // Sort alphabetically
                 allSignatories.sort((a, b) => a.localeCompare(b, 'sv'));
-                coSignatories.sort((a, b) =>
-                    a.name.localeCompare(b.name, 'sv')
-                );
-
+                coSignatories.sort((a, b) => a.name.localeCompare(b.name, 'sv'));
 
                 renderCoSignatories(coSignatories);
                 renderSignatories(allSignatories);
