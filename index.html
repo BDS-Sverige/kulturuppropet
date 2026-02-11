@@ -172,7 +172,6 @@
             text-decoration-color: #2E0000;
         }
 
-
         /* Home page */
         .pledge-section {
             background: linear-gradient(135deg, #FFFAFA 0%, #ebded4 100%);
@@ -228,6 +227,113 @@
         .signatories-section {
             margin-bottom: 3rem;
         }
+
+        .tabs-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            border: none;
+            background: transparent;
+            padding: 0.6rem 1.4rem;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+
+            color: #490000;
+            border: 2px solid #490000;
+            transition: all 0.25s ease;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #490000, #2E0000);
+            color: #FFFAFA;
+            box-shadow: 0 4px 14px rgba(73, 0, 0, 0.25);
+        }
+
+        .tab-count {
+            margin-left: 0.4rem;
+            opacity: 0.8;
+        }
+
+        /* Tab content */
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .unified-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Shared bubble card */
+        .name-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            background: #FFFAFA;
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+
+            box-shadow: 0 2px 12px rgba(73, 0, 0, 0.06);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .name-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(73, 0, 0, 0.12);
+        }
+
+        .name-initial {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            flex-shrink: 0;
+
+            background: linear-gradient(135deg, #490000, #2E0000);
+            color: #FFFAFA;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .name-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-text .name {
+            font-weight: 700;
+            color: #490000;
+            font-size: 0.95rem;
+        }
+
+        .name-text .title {
+            font-size: 0.8rem;
+            color: #6b3a3a;
+        }
+
 
         /* Shared name list style (non-interactive) */
         .name-item {
@@ -751,23 +857,30 @@
         <i>*Exempel på medverkan är att försköna eller rättfärdiga folkmord och apartheid och/eller samarbeta med den regering som begår dem. Svar på vanliga frågor om detta löfte finns <a href="https://orca-synthesizer-t7lz.squarespace.com/faqs"> här</a>.</i>
       </div><button class="cta-button" onclick="window.open('https://forms.gle/NsJ57kQVoC8i9LyT7', '_blank')">SKRIV UNDER HÄR!</button>
      </div>
-     <div class="cosignatories-section">
-      <div class="list-section-header">
-        <div class="list-section-label filled">Initiativtagare</div>
-        <div class="list-section-line"></div>
-      </div>
-      <div class="cosignatories-grid" id="coSignatoriesGrid"></div>
-     <div class="signatories-section">
-      <div class="list-section-header">
-        <div class="list-section-label outlined">Alla undertecknare</div>
-        <div class="list-section-line"></div>
-      </div>
-      <div class="signatories-count" id="signatoriesCount"></div>
-      <div class="search-container"><input type="text" id="searchInput" class="search-input" placeholder="Sök efter namn...">
-      </div>
-      <div class="signatories-list" id="signatoriesList"><!-- Populated by JavaScript -->
-      </div>
+     <div class="signatories-tabs">
+
+       <div class="tabs-header">
+         <button class="tab-button active" data-tab="co">
+           Initiativtagare <span class="tab-count" id="coCount">(0)</span>
+         </button>
+
+         <button class="tab-button" data-tab="all">
+           Alla undertecknare <span class="tab-count" id="allCount">(0)</span>
+         </button>
+       </div>
+
+       <div class="tabs-content">
+         <div class="tab-panel active" id="tab-co">
+           <div class="unified-grid" id="coSignatoriesGrid"></div>
+         </div>
+
+         <div class="tab-panel" id="tab-all">
+           <div class="unified-grid" id="signatoriesList"></div>
+         </div>
+       </div>
+
      </div>
+
      <div class="newsletter-section">
       <h2>Prenumerera på nyhetsbrev</h2>
       <p>Håll dig uppdaterad om utvecklingen av Kulturuppropet</p>
@@ -946,6 +1059,24 @@
             });
         });
 
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+
+                document.querySelectorAll('.tab-button').forEach(b =>
+                    b.classList.remove('active')
+                );
+                document.querySelectorAll('.tab-panel').forEach(p =>
+                    p.classList.remove('active')
+                );
+
+                button.classList.add('active');
+
+                const tab = button.dataset.tab;
+                document.getElementById(`tab-${tab}`).classList.add('active');
+            });
+        });
+
+
         async function loadSignatories() {
             try {
                 const response = await fetch(SHEET_URL);
@@ -1014,33 +1145,44 @@
 
             container.innerHTML = entries.map(({ name, title }) => {
                 const initial = name.trim().charAt(0).toUpperCase();
-                const safeTitle = stripQuotes(title?.trim() || "Kulturarbetare");
-                const cleanName = stripQuotes(name.trim());
+                const safeTitle = title?.trim() || "Kulturarbetare";
 
                 return `
-                    <div class="co-name">
-                        <div class="co-initial">${initial}</div>
-                        <div class="co-text">
-                            <div class="name">${cleanName}</div>
+                    <div class="name-card">
+                        <div class="name-initial">${initial}</div>
+                        <div class="name-text">
+                            <div class="name">${name}</div>
                             <div class="title">${safeTitle}</div>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            document.getElementById('coCount').textContent =
+                `(${entries.length})`;
         }
 
 
-        function renderSignatories(names, filter = '') {
+        function renderSignatories(names) {
             const container = document.getElementById('signatoriesList');
 
-            const filtered = names.filter(name =>
-                name.toLowerCase().includes(filter.toLowerCase())
-            );
+            container.innerHTML = names.map(name => {
+                const initial = name.trim().charAt(0).toUpperCase();
 
-            container.innerHTML = filtered.map(name =>
-                `<div class="name-item">${name}</div>`
-            ).join('');
+                return `
+                    <div class="name-card">
+                        <div class="name-initial">${initial}</div>
+                        <div class="name-text">
+                            <div class="name">${name}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('allCount').textContent =
+                `(${names.length})`;
         }
+
         
         function updateSignatoryCount(count) {
             const el = document.getElementById('signatoriesCount');
