@@ -271,6 +271,18 @@
             display: block;
         }
 
+        /* Remove mobile tap highlight */
+        .tab-button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Prevent text selection highlight */
+        .tab-button,
+        .tab-button:focus {
+            outline: none;
+            user-select: none;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
@@ -857,6 +869,7 @@
         <i>*Exempel på medverkan är att försköna eller rättfärdiga folkmord och apartheid och/eller samarbeta med den regering som begår dem. Svar på vanliga frågor om detta löfte finns <a href="https://orca-synthesizer-t7lz.squarespace.com/faqs"> här</a>.</i>
       </div><button class="cta-button" onclick="window.open('https://forms.gle/NsJ57kQVoC8i9LyT7', '_blank')">SKRIV UNDER HÄR!</button>
      </div>
+     <div class="search-container"><input type="text" id="searchInput" class="search-input" placeholder="Sök efter namn..."></div>
      <div class="signatories-tabs">
 
        <div class="tabs-header">
@@ -1037,15 +1050,38 @@
         ];
 
         const TEMP_SIGNATORIES = [
-          "Alex Johansson", "Beatrice Holm", "Carl Nyberg", "Dina Abbas",
-          "Emil Forsberg", "Felicia Strand", "Gustav Rydén", "Hala Mansour",
-          "Ida Palm", "Johan Ek", "Khadija Omar", "Leo Sundqvist",
-          "Malin Roos", "Nabil Farouk", "Olivia Sten",
-          "Patrik Hult", "Qasim Noor", "Rasmus Berglund",
-          "Sanna Björk", "Tariq Mahmoud", "Ulrika Fält",
-          "Victor Amin", "Wilma Ekholm", "Xenia Pavlov",
-          "Yasin Demir", "Zara Lindström", "Åsa Gran",
-          "Ömer Kaplan", "Ängla Fors", "Émile Dupont"
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" },
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" },
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" },
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" },
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" },
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" },
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" },
+          { name: "Anna Berg2", title: "Regissör" },
+          { name: "Jonas Nilsson2", title: "Författare" },
+          { name: "Maria Ekström2", title: "" },
+          { name: "David Larsson2", title: "Musiker" }
         ];
 
 
@@ -1076,6 +1112,8 @@
             });
         });
 
+        let masterCo = [];
+        let masterAll = [];
 
         async function loadSignatories() {
             try {
@@ -1105,45 +1143,63 @@
                     if (seen.has(key)) return; // Avoid duplicates
                     seen.add(key);
 
+                    const entry = {
+                        name: rawName,
+                        title: rawTitle || "Kulturarbetare"
+                    };
+
                     if (rawIsCo.toLowerCase() === 'ja') {
-                        coSignatories.push({
-                            name: rawName,
-                            title: rawTitle || "Kulturarbetare"
-                        });
+                        coSignatories.push(entry);
                     }
 
-                    allSignatories.push(rawName);
+                    allSignatories.push(entry);
                 });
 
                 // Sort alphabetically
-                allSignatories.sort((a, b) => a.localeCompare(b, 'sv'));
-                coSignatories.sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+                allSignatories.sort((a, b) =>
+                    a.name.localeCompare(b.name, 'sv')
+                );
+
+                coSignatories.sort((a, b) =>
+                    a.name.localeCompare(b.name, 'sv')
+                );
+
 
                 renderCoSignatories(coSignatories);
                 renderSignatories(allSignatories);
                 updateSignatoryCount(seen.size);
 
-                return allSignatories;
+                masterCo = coSignatories;
+                masterAll = allSignatories;
+
+                return;
 
             } catch (err) {
                 console.warn("Using temporary local signatory lists", err);
 
                 // Fallback for local testing
                 const co = [...TEMP_CO_SIGNATORIES].sort((a, b) => a.name.localeCompare(b.name, 'sv'));
-                const all = [...TEMP_SIGNATORIES].sort((a, b) => a.localeCompare(b, 'sv'));
+                const all = [...TEMP_SIGNATORIES].sort((a, b) => a.name.localeCompare(b, 'sv'));
 
                 renderCoSignatories(co);
                 renderSignatories(all);
                 updateSignatoryCount(co.length + all.length);
 
-                return all;
+                masterCo = co;
+                masterAll = all;
+
+                return;
             }
         }
 
-        function renderCoSignatories(entries) {
+        function renderCoSignatories(entries, filter = "") {
             const container = document.getElementById('coSignatoriesGrid');
+            
+            const filtered = entries.filter(entry =>
+                entry.name.toLowerCase().includes(filter.toLowerCase())
+            );
 
-            container.innerHTML = entries.map(({ name, title }) => {
+            container.innerHTML = filtered.map(({ name, title }) => {
                 const initial = name.trim().charAt(0).toUpperCase();
                 const safeTitle = title?.trim() || "Kulturarbetare";
 
@@ -1163,10 +1219,10 @@
         }
 
 
-        function renderSignatories(names) {
+        function renderSignatories(entries) {
             const container = document.getElementById('signatoriesList');
 
-            container.innerHTML = names.map(name => {
+            container.innerHTML = entries.map(({ name, title }) => {
                 const initial = name.trim().charAt(0).toUpperCase();
 
                 return `
@@ -1174,13 +1230,37 @@
                         <div class="name-initial">${initial}</div>
                         <div class="name-text">
                             <div class="name">${name}</div>
+                            <div class="title">${title || "Kulturarbetare"}</div>
                         </div>
                     </div>
                 `;
             }).join('');
 
             document.getElementById('allCount').textContent =
-                `(${names.length})`;
+                `(${entries.length})`;
+        }
+
+        function handleSearch(query) {
+            const q = query.toLowerCase().trim();
+
+            if (!q) {
+                renderCoSignatories(masterCo);
+                renderSignatories(masterAll);
+                return;
+            }
+
+            const filteredCo = masterCo.filter(entry =>
+                entry.name.toLowerCase().includes(q) ||
+                entry.title.toLowerCase().includes(q)
+            );
+
+            const filteredAll = masterAll.filter(entry =>
+                entry.name.toLowerCase().includes(q) ||
+                entry.title.toLowerCase().includes(q)
+            );
+
+            renderCoSignatories(filteredCo);
+            renderSignatories(filteredAll);
         }
 
         
@@ -1248,9 +1328,9 @@
         }
 
         // Search functionality
-        /*document.getElementById('searchInput').addEventListener('input', function () {
-            renderSignatories(allSignatories, this.value);
-        });*/
+        document.getElementById('searchInput').addEventListener('input', e => {
+            handleSearch(e.target.value);
+        });
 
 
         // FAQ toggle
@@ -1348,9 +1428,7 @@
         }
 
         // Initialize
-        loadSignatories().then(names => {
-            allSignatories = names;
-        });
+        loadSignatories();
 
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c826bbe15bbf375',t:'MTc3MDEyNjg3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
