@@ -228,6 +228,57 @@
             margin-bottom: 3rem;
         }
 
+        /* ===== Stats Bar ===== */
+
+        .signatures-stats {
+            margin: 3rem 0 4rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .stats-inner {
+            background: #FFFAFA;
+            border-radius: 20px;
+            padding: 2rem 3rem;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+
+            box-shadow: 0 6px 28px rgba(73, 0, 0, 0.08);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif; /* replace with your display font */
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #490000;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            opacity: 0.7;
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 60px;
+            background: #490000;
+            opacity: 0.2;
+        }
+
+
         .tabs-header {
             display: flex;
             gap: 1rem;
@@ -825,6 +876,20 @@
             .newsletter-form {
                 flex-direction: column;
             }
+
+            .stats-inner {
+                flex-direction: column;
+                gap: 2rem;
+                padding: 2rem;
+            }
+
+            .stat-divider {
+                display: none;
+            }
+
+            .stat-number {
+                font-size: 2.4rem;
+            }
         }
 
     </style>
@@ -869,7 +934,33 @@
         <i>*Exempel på medverkan är att försköna eller rättfärdiga folkmord och apartheid och/eller samarbeta med den regering som begår dem. Svar på vanliga frågor om detta löfte finns <a href="https://orca-synthesizer-t7lz.squarespace.com/faqs"> här</a>.</i>
       </div><button class="cta-button" onclick="window.open('https://forms.gle/NsJ57kQVoC8i9LyT7', '_blank')">SKRIV UNDER HÄR!</button>
      </div>
+     <div class="signatures-stats">
+       <div class="stats-inner">
+
+         <div class="stat-item">
+           <div class="stat-number" id="totalCount">0</div>
+           <div class="stat-label">Totalt antal</div>
+         </div>
+
+         <div class="stat-divider"></div>
+
+         <div class="stat-item">
+           <div class="stat-number" id="statsCoCount">0</div>
+           <div class="stat-label">Initiativtagare</div>
+         </div>
+
+         <div class="stat-divider"></div>
+
+         <div class="stat-item">
+           <div class="stat-number" id="statsAdditionalCount">0</div>
+           <div class="stat-label">Övriga undertecknare</div>
+         </div>
+
+       </div>
+     </div>
+
      <div class="search-container"><input type="text" id="searchInput" class="search-input" placeholder="Sök efter namn..."></div>
+
      <div class="signatories-tabs">
 
        <div class="tabs-header">
@@ -1186,6 +1277,8 @@
                 masterCo = coSignatories;
                 masterAll = allSignatories;
 
+                updateStats(masterCo, masterAll);
+
                 return;
 
             } catch (err) {
@@ -1202,8 +1295,20 @@
                 masterCo = co;
                 masterAll = all;
 
+                updateStats(masterCo, masterAll);
+
                 return;
             }
+        }
+
+        function updateStats(coList, allList) {
+            const total = allList.length;
+            const co = coList.length;
+            const additional = total - co;
+
+            document.getElementById("totalCount").textContent = total;
+            document.getElementById("statsCoCount").textContent = co;
+            document.getElementById("statsAdditionalCount").textContent = additional;
         }
 
         function renderCoSignatories(entries, filter = "") {
